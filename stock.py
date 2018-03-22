@@ -32,9 +32,7 @@ def daydata():
         date.append(d)
         turnover_list.append(s.turnover)
     # 序列化，并发送
-    text = []
-    text.append(date)
-    text.append(turnover_list)
+    text = [date, turnover_list]
     return Response(json.dumps(text), mimetype='application/json')
 
 
@@ -71,8 +69,5 @@ def weekdata():
     w = current_week[:4] + '年/第' + current_week[4:] + '周'
     date.append(w)
     # 序列化，并发送
-    text = []
-    text.append(date)
-    text.append(turnover_list)
+    text = [date, turnover_list]
     return Response(json.dumps(text), mimetype='application/json')
-
