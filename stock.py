@@ -10,6 +10,11 @@ import time
 # 创建蓝图
 main = Blueprint('stock', __name__)
 
+def foo(turnover_sum, day_counter, turnover_list, current_week, date):
+    perweek_turnover = turnover_sum / day_counter
+    turnover_list.append(perweek_turnover)
+    w = current_week[:4] + '年/第' + current_week[4:] + '周'
+    date.append(w)
 
 @main.route('/')
 def index():
@@ -55,19 +60,13 @@ def weekdata():
         else:
             # 进入下一周了
             # 计算上一周的平均交易额，输出平均交易额和周
-            perweek_turnover = turnover_sum / day_counter
-            turnover_list.append(perweek_turnover)
-            w = current_week[:4] + '年/第' + current_week[4:] + '周'
-            date.append(w)
+            foo(turnover_sum, day_counter, turnover_list, current_week, date)
             # 修改 current_week 为当前周，重置 turnover_sum 和 day_counter
             current_week = d
             turnover_sum = s.turnover
             day_counter = 1
     # 将最后一周的数据输出
-    perweek_turnover = turnover_sum / day_counter
-    turnover_list.append(perweek_turnover)
-    w = current_week[:4] + '年/第' + current_week[4:] + '周'
-    date.append(w)
+    foo(turnover_sum, day_counter, turnover_list, current_week, date)
     # 序列化，并发送
     text = [date, turnover_list]
     return Response(json.dumps(text), mimetype='application/json')
